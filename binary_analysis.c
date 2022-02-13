@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <bfd.h>
 
 void print_architecture(bfd *file) {
@@ -13,6 +14,37 @@ void print_section(bfd *file) {
     asection *p;
     for (p = file->sections; p != NULL; p = p->next) {
         printf("%s\n", p->name);
+    }
+}
+
+void print_symbol(bfd *file) {
+    puts("symbol:");
+
+    long n = bfd_get_symtab_upper_bound(file);
+
+    if (n < 0) {
+        puts("Failed to read symtab");
+        return;
+    }
+
+    asymbol **bfd_symtab = (asymbol**)malloc(n);
+
+    if (!bfd_symtab) {
+        puts("Failed to allocate memory");
+        return;
+    }
+
+    long nsyms = bfd_canonicalize_symtab(file, bfd_symtab);
+
+    if (!nsyms) {
+        puts("Failed to read symtab");
+        return;
+    }
+
+    for (int i = 0; i < nsyms; i++) {
+        if (bfd_symtab[i]->flags & BSF_FUNCTION) {
+            printf("%s\n", bfd_symtab[i]->name);
+        }
     }
 }
 
@@ -44,6 +76,8 @@ int main(int argc, char *argv[]) {
     print_architecture(file);
     puts("");
     print_section(file);
+    puts("");
+    print_symbol(file);
 
     return 0;
 }
