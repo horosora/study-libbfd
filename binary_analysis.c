@@ -28,5 +28,11 @@ int main(int argc, char *argv[]) {
 
     printf("arch: %s\n", bfd_get_arch_info(file)->printable_name);
 
+    puts("section: ");
+    asection *p;
+    for (p = file->sections; p != NULL; p = p->next) {
+        printf("%s\n", p->name);
+    }
+
     return 0;
 }
