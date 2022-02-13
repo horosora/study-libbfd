@@ -1,6 +1,21 @@
 #include <stdio.h>
 #include <bfd.h>
 
+void print_architecture(bfd *file) {
+    puts("architecture:");
+
+    printf("%s\n", bfd_get_arch_info(file)->printable_name);
+}
+
+void print_section(bfd *file) {
+    puts("section:");
+
+    asection *p;
+    for (p = file->sections; p != NULL; p = p->next) {
+        printf("%s\n", p->name);
+    }
+}
+
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         printf("%s [binary]\n", argv[0]);
@@ -26,13 +41,9 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    printf("arch: %s\n", bfd_get_arch_info(file)->printable_name);
-
-    puts("section: ");
-    asection *p;
-    for (p = file->sections; p != NULL; p = p->next) {
-        printf("%s\n", p->name);
-    }
+    print_architecture(file);
+    puts("");
+    print_section(file);
 
     return 0;
 }
