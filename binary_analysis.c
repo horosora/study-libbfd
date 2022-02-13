@@ -3,22 +3,21 @@
 #include <bfd.h>
 
 void print_architecture(bfd *file) {
-    puts("architecture:");
+    puts("[+] architecture");
 
     printf("%s\n", bfd_get_arch_info(file)->printable_name);
 }
 
 void print_section(bfd *file) {
-    puts("section:");
+    puts("[+] section");
 
-    asection *p;
-    for (p = file->sections; p != NULL; p = p->next) {
+    for (asection *p = file->sections; p != NULL; p = p->next) {
         printf("%s\n", p->name);
     }
 }
 
 void print_symbol(bfd *file) {
-    puts("symbol:");
+    puts("[+] symbol");
 
     long n = bfd_get_symtab_upper_bound(file);
 
